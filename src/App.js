@@ -1,28 +1,37 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import Child from './components/Child';
+import LangControls from './components/LangControls';
+import LanguageContext from './components/LanguageContext';
 import './App.css';
 
-class App extends Component {
+export default class App extends Component {
+  state = {
+    lang: window.navigator.language
+  };
+
+  handleSetLang = (lang) => {
+    this.setState({ lang })
+  };
+
   render() {
+    const contextValue = {
+      lang: this.state.lang,
+      setLang: this.handleSetLang
+    }
+
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <LanguageContext.Provider
+        //we need to add the data back in 
+        //by providing a prop called value to the Provider 
+        //with the same object we expect (moved it to state)
+        value={contextValue}>
+        <div className="App">
+          <header className="App-header">
+            <LangControls onSetLang={this.handleSetLang} />
+            <Child />
+          </header>
+        </div>
+      </LanguageContext.Provider>
     );
   }
 }
-
-export default App;
